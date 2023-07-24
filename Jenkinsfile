@@ -1,5 +1,3 @@
-
-
 pipeline {
     agent none
     options {
@@ -37,7 +35,7 @@ pipeline {
                 input message: 'Lanjutkan ke tahap Deploy? (Klik Proceed untuk Deploy)'
             }
         }
-        stage('Deliver') { 
+        stage('Deploy') { 
             agent any
             environment { 
                 VOLUME = '$(pwd)/sources:/src'
@@ -47,6 +45,7 @@ pipeline {
                 dir(path: env.BUILD_ID) { 
                     unstash(name: 'compiled-results') 
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'" 
+		    sh "sleep 1m"
                 }
             }
             post {
